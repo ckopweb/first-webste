@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Account Creation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://t4.ftcdn.net/jpg/05/11/09/55/360_F_511095523_WUmBt4yw9wAkNA72R5GHOvMP1vpU8p9W.jpg'); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the background image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .photos {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .photos img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .photos img.selected {
+            border-color: #28a745;
+        }
+        /* Profile Page Styles */
+        .profile-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .profile-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        .profile-container span {
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+        /* Welcome message styles */
+        .welcome-message {
+            text-align: center;
+            font-size: 24px;
+            color: #00ff00; /* Green neon color */
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="loginContainer">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="loginUsername" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="loginPassword" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+        <p id="loginMessage" style="color:red;"></p>
+    </form>
+    <a href="#" id="createAccountLink">Create an account</a>
+</div>
+
+<div class="container" id="createAccountContainer" style="display:none;">
+    <h2>Create Account</h2>
+    <form id="createAccountForm">
+        <label for="newUsername">Create Username:</label>
+        <input type="text" id="newUsername" name="newUsername" required>
+        <br>
+        <label for="newPassword">Create Password:</label>
+        <input type="password" id="newPassword" name="newPassword" required>
+        <br>
+        <button type="submit">Submit</button>
+        <p id="accountMessage" style="color:green;"></p>
+    </form>
+    <a href="#" id="backToLogin">Back to Login</a>
+</div>
+
+<div class="container" id="photoSelectionContainer" style="display:none;">
+    <h2>Select Your Profile Photo</h2>
+    <div class="photos">
+        <!-- Use your own personal images here -->
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYdqQ-FaAyCPTPef0Iztklrgblgoa2vrMtcJ_M4n7q734mEzJu9fzNFU4h4wsEMZnpWuI&usqp=CAU" alt="Hacker Photo 1" id="photo1">
+        <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f0f0d8c-eacc-48db-abd0-e7c953bbc059/dg9qvis-93a0560a-707e-4674-85e9-647451247c4d.jpg/v1/fill/w_788,h_1014,q_70,strp/glitched_elegance__an_inkpunk_fusion_by_abdallahalswaiti_dg9qvis-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmMGYwZDhjLWVhY2MtNDhkYi1hYmQwLWU3Yzk1M2JiYzA1OVwvZGc5cXZpcy05M2EwNTYwYS03MDdlLTQ2NzQtODVlOS02NDc0NTEyNDdjNGQuanBnIiwiaGVpZ2h0IjoiPD0yNDY5Iiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uud2F0ZXJtYXJrIl0sIndtayI6eyJwYXRoIjoiXC93bVwvM2YwZjBkOGMtZWFjYy00OGRiLWFiZDAtZTdjOTUzYmJjMDU5XC9hYmRhbGxhaGFsc3dhaXRpLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.SFzZEPcH7v6Vst919F6wKwLQwsR9qhf-ds9XlwGacKk" alt="Hacker Photo 2" id="photo2">
+        <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f0f0d8c-eacc-48db-abd0-e7c953bbc059/dgagrsn-b5f173ad-0e9a-4da2-9c81-7df39b4f4af2.jpg/v1/fit/w_828,h_474,q_70,strp/portrait_of_a_punk_latina_with_freckles_by_abdallahalswaiti_dgagrsn-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmMGYwZDhjLWVhY2MtNDhkYi1hYmQwLWU3Yzk1M2JiYzA1OVwvZGdhZ3Jzbi1iNWYxNzNhZC0wZTlhLTRkYTItOWM4MS03ZGYzOWI0ZjRhZjIuanBnIiwiaGVpZ2h0IjoiPD0xMDk4Iiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uud2F0ZXJtYXJrIl0sIndtayI6eyJwYXRoIjoiXC93bVwvM2YwZjBkOGMtZWFjYy00OGRiLWFiZDAtZTdjOTUzYmJjMDU5XC9hYmRhbGxhaGFsc3dhaXRpLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.H6rWyrs2mFHbXJMknrg6qhBheygUkzhSfSIqf3_xmrs" alt="Hacker Photo 3" id="photo3">
+        <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f0f0d8c-eacc-48db-abd0-e7c953bbc059/dg9qvjm-b44f2bc9-ad07-411c-9685-c2383da250b8.jpg/v1/fit/w_828,h_474,q_70,strp/printmaker_s_palette__a_postmodern_inkpunk_fusion_by_abdallahalswaiti_dg9qvjm-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmMGYwZDhjLWVhY2MtNDhkYi1hYmQwLWU3Yzk1M2JiYzA1OVwvZGc5cXZqbS1iNDRmMmJjOS1hZDA3LTQxMWMtOTY4NS1jMjM4M2RhMjUwYjguanBnIiwiaGVpZ2h0IjoiPD0xMDk4Iiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uud2F0ZXJtYXJrIl0sIndtayI6eyJwYXRoIjoiXC93bVwvM2YwZjBkOGMtZWFjYy00OGRiLWFiZDAtZTdjOTUzYmJjMDU5XC9hYmRhbGxhaGFsc3dhaXRpLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.Peeffy9GabUuB1CfmI5EY-xDQEWCWoKYpnQFNfiM_1A" alt="Hacker Photo 4" id="photo4">
+        <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5a95ed8d-0061-4c8c-82f0-2267c7ab5413/dfywby9-c4eb70c0-b80a-4cdd-89ae-e13eb6bc4d90.png/v1/fit/w_512,h_512,q_70,strp/hacker_profile_picture___avatar_by_nickzsche_dfywby9-375w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvNWE5NWVkOGQtMDA2MS00YzhjLTgyZjAtMjI2N2M3YWI1NDEzXC9kZnl3Ynk5LWM0ZWI3MGMwLWI4MGEtNGNkZC04OWFlLWUxM2ViNmJjNGQ5MC5wbmciLCJ3aWR0aCI6Ijw9NTEyIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.VaTKk01-YmvD9Ku73wI5ITy8MhrJRnTRHL9vDX8Q4-Q" alt="Hacker Photo 5" id="photo5">
+    </div>
+    <button id="submitPhotoButton">Submit Photo</button>
+</div>
+
+<!-- Profile Page -->
+<div class="container" id="profileContainer" style="display:none;">
+    <div class="welcome-message">Created by chalukya</div>
+    <div class="profile-container">
+        <img src="" alt="Profile Photo" id="profilePhoto" style="display:none;">
+        <span id="profileUsername"></span>
+    </div>
+    <button id="logoutButton">Logout</button>
+</div>
+
+<script>
+    const loginContainer = document.getElementById('loginContainer');
+    const createAccountContainer = document.getElementById('createAccountContainer');
+    const photoSelectionContainer = document.getElementById('photoSelectionContainer');
+    const profileContainer = document.getElementById('profileContainer');
+    
+    // Handle account creation
+    document.getElementById('createAccountLink').onclick = function() {
+        loginContainer.style.display = 'none';
+        createAccountContainer.style.display = 'block';
+    };
+
+    document.getElementById('backToLogin').onclick = function() {
+        createAccountContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+    };
+
+    document.getElementById('createAccountForm').onsubmit = function(event) {
+        event.preventDefault();
+        const newUsername = document.getElementById('newUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        // Simulate account creation
+        localStorage.setItem(newUsername, newPassword);
+        document.getElementById('accountMessage').textContent = 'Account created successfully! You can now log in.';
+        createAccountContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+    };
+
+    // Handle login
+    document.getElementById('loginForm').onsubmit = function(event) {
+        event.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Simulate login
+        if (localStorage.getItem(username) === password) {
+            loginContainer.style.display = 'none';
+            photoSelectionContainer.style.display = 'block';
+        } else {
+            document.getElementById('loginMessage').textContent = 'Invalid username or password.';
+        }
+    };
+
+    // Handle photo selection
+    let selectedPhoto = '';
+    const photos = document.querySelectorAll('.photos img');
+    photos.forEach(photo => {
+        photo.onclick = function() {
+            photos.forEach(p => p.classList.remove('selected'));
+            photo.classList.add('selected');
+            selectedPhoto = photo.src; // Store selected photo
+        };
+    });
+
+    document.getElementById('submitPhotoButton').onclick = function() {
+        if (selectedPhoto) {
+            document.getElementById('profilePhoto').src = selectedPhoto;
+            document.getElementById('profilePhoto').style.display = 'block';
+            document.getElementById('profileUsername').textContent = document.getElementById('loginUsername').value;
+            photoSelectionContainer.style.display = 'none';
+            profileContainer.style.display = 'block';
+        }
+    };
+
+    // Handle logout
+    document.getElementById('logoutButton').onclick = function() {
+        profileContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+    };
+</script>
+
+</body>
+</html>
